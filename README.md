@@ -111,8 +111,105 @@ Documents what was learned — including what didn't work and why.
 | GTKWave        | Waveform viewing and verification |
 | VS Code        |           Code editor             |
 | GitHub         | Version control and documentation |
+---
+# Progress Report Day 1:
+What was done today: Today , the state diagram was made firstly on paper for knowing the architecture
+then State tables made for all the states there is table given below and state diagram drawn through blocks.
+Made some descisions like what state will remain on till how much cylces and defining which traffic-light output 
+is active in each state,also took descisons like when on emergency should it go to previous state or it should
+go back to the very first beginning state.
+
+Then made some progress with project starting with the file of main module where today made only the inputs and the parameters needed which are explained briefly below.
+
+## State Diagram
+
+                         Timer = 5 cycles
+                    ┌──────────────────────┐
+                    │                      ↓
+                 ┌───────┐             ┌────────┐
+          ┌──────│  RED  │────────────→│ YELLOW │
+          │      └───────┘  Timer=5    └────────┘
+          │                                  │
+          │                              Timer=3
+          │                                  ↓
+          │                              ┌────────┐
+          │                              │ GREEN  │
+          │                              └────────┘
+          │                                  │
+          │                             Timer=10
+          │                                  ↓
+          │                            ┌──────────┐
+          │                            │ ALL_RED  │
+          │                            └──────────┘
+          │                                  │
+          │                              Timer=2
+          └──────────────────────────────────┘
+** For Emergency **
+                 Emergency = 1
+        ┌────────────────────────────────┐
+        │                                ↓
+      RED ─────────────────────────→ EMERGENCY
+      YELLOW ──────────────────────→ EMERGENCY
+      GREEN ───────────────────────→ EMERGENCY
+      ALL_RED ─────────────────────→ EMERGENCY
+                                      │
+                              Emergency = 0
+                                      ↓
+                              Previous State
+## State table
+
+| Current State    | Emergency | Timer Condition | Next State     |
+| ---------------- | --------: | --------------- | -------------- |
+| RED              |         0 | Timer < 5       | RED            |
+| RED              |         0 | Timer = 5       | YELLOW         |
+| YELLOW           |         0 | Timer < 3       | YELLOW         |
+| YELLOW           |         0 | Timer = 3       | GREEN          |
+| GREEN            |         0 | Timer < 10      | GREEN          |
+| GREEN            |         0 | Timer = 10      | ALL_RED        |
+| ALL_RED          |         0 | Timer < 2       | ALL_RED        |
+| ALL_RED          |         0 | Timer = 2       | RED            |
+| Any normal state |     **1** | Don't care      | **EMERGENCY**  |
+| EMERGENCY        |         1 | Don't care      | EMERGENCY      |
+| EMERGENCY        |         0 | Don't care      | Previous State |
+
+## ARCHITECTURE 
+
+                 ┌──────────────────┐
+                 │   State Register │
+Clock ──────────→│                  │
+Reset ──────────→│ current_state    │
+                 └────────┬─────────┘
+                          │
+                          ↓
+                 ┌──────────────────┐
+                 │  Next-State      │
+Emergency ──────→│     Logic        │
+                 └────────┬─────────┘
+                          │
+                          ↓
+                 ┌──────────────────┐
+                 │ Timer / Counter  │
+                 └────────┬─────────┘
+                          │
+                          ↓
+                 ┌──────────────────┐
+                 │ Output Logic     │
+                 └──────────────────┘
+                          │
+             ┌────────────┴────────────┐
+             ↓                         ↓
+       Traffic Lights           Emergency_Out
+---
+### Day 1 Outcome
+
+Architecture finalized → State behavior defined → Emergency strategy decided → Initial RTL structure created.
+
+Next step: implement the state register and timer/counter logic.
+
+**Day 1: Architecture ✅**  
 
 ---
+
 
 ## Current Progress
 
