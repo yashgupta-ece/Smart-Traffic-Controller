@@ -2,7 +2,7 @@
 
 > **Tools:** Icarus Verilog · GTKWave · VS Code  
 > **Language:** Verilog HDL  
-> **Status:** 🔄 Phase A — In Progress
+> **Status:** ✅ Phase A Complete — Basic Controller Done
 
 ---
 
@@ -206,22 +206,62 @@ Architecture finalized → State behavior defined → Emergency strategy decided
 
 Next step: implement the state register and timer/counter logic.
 
-**Day 1: Architecture ✅**  
+**Day 1: Architecture ✅** 
 
 ---
+### Day 7 Outcome
+
+### Phase A — Basic Traffic Controller
+**Status:** ✅ Complete
+
+A Moore FSM with 5 states controlling a traffic light system.
+Timer-based transitions — each state remains active for a 
+configurable number of clock cycles before transitioning.
+
+**States:**
+
+| State     |         Output           |    Duration   |
+|-----------|--------------------------|---------------|
+| RED       |           Red=1          |    5 cycles   |
+| YELLOW    |          Yellow=1        |     3 cycles  |
+| GREEN     |           Green=1        |    10 cycles  |
+| ALL_RED   | Red=1, Yellow=1, Green=1 |    2 cycles   |
+| EMERGENCY | Red=1, Emergency_out=1   | Until cleared |
+
+**Waveform:**
+
+![Phase A Waveform](Waveforms/waveform_basic.png)
+
+**State Diagram:**
+
+![Phase A State Diagram](docs/state_diagram_phase_a.jpeg)
+
+**Key design decisions:**
+- Timer implemented as a counter inside the state register block
+- `state_duration` computed combinationally based on current state
+- ALL_RED state added as a safety buffer between GREEN and RED
+- EMERGENCY stores previous state for clean recovery
+
+**Files:**
+- `src/Traffic_Controller.v` — main FSM module
+- `testbenches/Traffic_Controller_tb.v` — Phase A testbench
 
 
 ## Current Progress
 
 - [x] Project structure created
 - [x] Research question defined
-- [ ] Phase A — Basic FSM designed and simulated
-- [ ] Phase A — State diagram documented
-- [ ] Phase B — Emergency override added
+- [x] Phase A — Basic FSM designed and simulated
+- [x] Phase A — Timer-based transitions verified in GTKWave
+- [x] Phase A — State diagram documented
+- [ ] Phase B — Emergency override tested with dedicated testbench
 - [ ] Phase B — Recovery behaviour verified
 - [ ] Phase C — Comparison written
 - [ ] Phase C — README complete with findings
 
+---
+### Phase B — Emergency Vehicle Override
+**Status:** 🔄 In Progress
 ---
 
 *This project is part of my preparation for VLSI research internship 
