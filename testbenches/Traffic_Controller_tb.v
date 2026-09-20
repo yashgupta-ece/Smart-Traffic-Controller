@@ -23,8 +23,6 @@ module Traffic_Controller_tb;
     always #5 Clock = ~Clock;
 
     initial begin
-
-        // Generate waveform file
         $dumpfile("Traffic_Controller.vcd");
         $dumpvars(0, Traffic_Controller_tb);
         $monitor(

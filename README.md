@@ -1,270 +1,244 @@
 # FSM-Based Smart Traffic Light Controller with Emergency Override
 
-> **Tools:** Icarus Verilog · GTKWave · VS Code  
+> **Tools:** Icarus Verilog · GTKWave · VS Code 
 > **Language:** Verilog HDL  
-> **Status:** ✅ Phase A Complete — Basic Controller Done
+> **Author:** Yash Gupta | ECE 3rd Year 
+> **Status:** ✅ Phase A Complete · ✅ Phase B Complete · ⬜ Phase C In Progress
 
 ---
 
 ## Research Question
 
-> *How does the choice of FSM design and state encoding affect system 
-> responsiveness and hardware behaviour when priority conditions are 
-> introduced into a real-time digital controller?*
+> *How does implementing priority-based emergency override in an FSM-based 
+> digital controller affect state complexity, hardware resource usage, and 
+> system responsiveness compared to a basic sequential FSM design?*
 
-This project investigates that question by building a traffic light 
-controller in two phases — first without emergency override, then with 
-it — and comparing the design decisions, state complexity, and 
-behavioural differences between both versions.
+This project investigates that question by designing a complete 5-state 
+traffic light controller with emergency override built from the start, 
+verifying it exhaustively through simulation, and analysing the hardware 
+implications through Yosys synthesis in Phase C.
 
 ---
 
 ## Why This Project
 
 A traffic light controller is one of the simplest real-world FSM 
-applications. But adding an emergency vehicle override turns it into 
-a genuinely interesting design problem — the FSM must handle a 
-priority condition that can interrupt normal operation at any state 
-and recover cleanly when the condition clears.
+applications. But adding emergency vehicle override turns it into a 
+genuinely interesting design problem — the FSM must handle a priority 
+condition that can interrupt normal operation at any state and recover 
+cleanly when the condition clears.
 
-This project was built to understand how that priority logic changes 
-FSM design at the RTL level — not just to make a traffic light work.
+This project was designed with the complete 5-state architecture from 
+the start — including emergency handling — because the state diagram 
+made clear that emergency logic cannot be retrofitted cleanly. It 
+changes the fundamental FSM structure including state encoding, register 
+width, and output logic.
+
+The project investigates how that design choice affects hardware 
+complexity and system behaviour through simulation and synthesis analysis.
 
 ---
 
 ## Project Structure
 
+```
 smart-traffic-controller/
-src/
-traffic_basic.v — Phase A: basic FSM
-traffic_emergency.v — Phase B: FSM with emergency override
-traffic_top.v — Phase B: top module
-testbenches/
-tb_traffic_basic.v — Phase A testbench
-tb_traffic_emergency.v — Phase B testbench
-docs/
-state_diagram_basic.png — Phase A state diagram
-state_diagram_emergency.png — Phase B state diagram
-waveform_basic.png — Phase A GTKWave output
-waveform_emergency.png — Phase B GTKWave output
-README.md
+  src/
+    Traffic_Controller.v           — Complete 5-state FSM module
+  testbenches/
+    Traffic_Controller_tb.v        — Phase A: normal operation testbench
+    PHASE_B_verification_tb.v      — Phase B: emergency scenario testbench
+  docs/
+    state_diagram_phase_a.jpeg     — Hand-drawn state diagram
+  Waveforms/
+    waveform_basic.png             — Phase A GTKWave output
+    Verification_phase_b.png       — Phase B GTKWave output
+  README.md
+  DEVLOG.md
+  .gitignore
+```
+
 ---
 
 ## Development Phases
 
-### Phase A — Basic Traffic Controller
-**Status:** 🔄 In Progress
-
-A Moore FSM with 4 states controlling a 4-direction traffic light 
-system. Clock-driven state transitions, synchronous reset, full 
-testbench with all state transitions verified.
-
-**States:** S0 → S1 → S2 → S3 → S0 (repeating cycle)  
-**Goal:** Verify basic FSM structure and timing before adding complexity.
-
----
-
-### Phase B — Emergency Vehicle Override
-**Status:** ⬜ Not Started
-
-Adds an emergency input that immediately forces the FSM into a 
-dedicated EMERGENCY state regardless of current state. The system 
-stores the previous state and recovers to it when emergency clears.
-
-**New state:** EMERGENCY  
-**New input:** Emergency signal (active HIGH)  
-**Goal:** Understand how priority logic changes FSM design.
-
----
-
-### Phase C — Comparison and Documentation
-**Status:** ⬜ Not Started
-
-Compares Phase A and Phase B designs across three dimensions:
-- State count and complexity
-- How priority input changed the state transition diagram
-- Behavioural differences visible in GTKWave waveforms
-
-Documents what was learned — including what didn't work and why.
-
-**Goal:** Answer the research question with evidence from simulation.
-
----
-
-## Module Structure
-
-|            Module             |          File            | Phase |
-|-------------------------------|--------------------------|-------|
-| Basic Traffic Controller      | `traffic_basic.v`        |   A   |
-| Emergency Override Controller | `traffic_emergency.v`    |   B   |
-| Top Module                    | `traffic_top.v`          |   B   |
-| Basic Testbench               | `tb_traffic_basic.v`     |   A   | 
-| Emergency Testbench           | `tb_traffic_emergency.v` |   B   |
-
----
-
-## Tools
-
-| Tool           |           Purpose                 |
-|----------------|-----------------------------------|
-| Icarus Verilog | Compilation and simulation        |
-| GTKWave        | Waveform viewing and verification |
-| VS Code        |           Code editor             |
-| GitHub         | Version control and documentation |
----
-# Progress Report Day 1:
-What was done today: Today , the state diagram was made firstly on paper for knowing the architecture
-then State tables made for all the states there is table given below and state diagram drawn through blocks.
-Made some descisions like what state will remain on till how much cylces and defining which traffic-light output 
-is active in each state,also took descisons like when on emergency should it go to previous state or it should
-go back to the very first beginning state.
-
-Then made some progress with project starting with the file of main module where today made only the inputs and the parameters needed which are explained briefly below.
-
-## State Diagram
-
-                         Timer = 5 cycles
-                    ┌──────────────────────┐
-                    │                      ↓
-                 ┌───────┐             ┌────────┐
-          ┌──────│  RED  │────────────→│ YELLOW │
-          │      └───────┘  Timer=5    └────────┘
-          │                                  │
-          │                              Timer=3
-          │                                  ↓
-          │                              ┌────────┐
-          │                              │ GREEN  │
-          │                              └────────┘
-          │                                  │
-          │                             Timer=10
-          │                                  ↓
-          │                            ┌──────────┐
-          │                            │ ALL_RED  │
-          │                            └──────────┘
-          │                                  │
-          │                              Timer=2
-          └──────────────────────────────────┘
-** For Emergency **
-                 Emergency = 1
-        ┌────────────────────────────────┐
-        │                                ↓
-      RED ─────────────────────────→ EMERGENCY
-      YELLOW ──────────────────────→ EMERGENCY
-      GREEN ───────────────────────→ EMERGENCY
-      ALL_RED ─────────────────────→ EMERGENCY
-                                      │
-                              Emergency = 0
-                                      ↓
-                              Previous State
-## State table
-
-| Current State    | Emergency | Timer Condition | Next State     |
-| ---------------- | --------: | --------------- | -------------- |
-| RED              |         0 | Timer < 5       | RED            |
-| RED              |         0 | Timer = 5       | YELLOW         |
-| YELLOW           |         0 | Timer < 3       | YELLOW         |
-| YELLOW           |         0 | Timer = 3       | GREEN          |
-| GREEN            |         0 | Timer < 10      | GREEN          |
-| GREEN            |         0 | Timer = 10      | ALL_RED        |
-| ALL_RED          |         0 | Timer < 2       | ALL_RED        |
-| ALL_RED          |         0 | Timer = 2       | RED            |
-| Any normal state |     **1** | Don't care      | **EMERGENCY**  |
-| EMERGENCY        |         1 | Don't care      | EMERGENCY      |
-| EMERGENCY        |         0 | Don't care      | Previous State |
-
-## ARCHITECTURE 
-
-                 ┌──────────────────┐
-                 │   State Register │
-Clock ──────────→│                  │
-Reset ──────────→│ current_state    │
-                 └────────┬─────────┘
-                          │
-                          ↓
-                 ┌──────────────────┐
-                 │  Next-State      │
-Emergency ──────→│     Logic        │
-                 └────────┬─────────┘
-                          │
-                          ↓
-                 ┌──────────────────┐
-                 │ Timer / Counter  │
-                 └────────┬─────────┘
-                          │
-                          ↓
-                 ┌──────────────────┐
-                 │ Output Logic     │
-                 └──────────────────┘
-                          │
-             ┌────────────┴────────────┐
-             ↓                         ↓
-       Traffic Lights           Emergency_Out
----
-### Day 1 Outcome
-
-Architecture finalized → State behavior defined → Emergency strategy decided → Initial RTL structure created.
-
-Next step: implement the state register and timer/counter logic.
-
-**Day 1: Architecture ✅** 
-
----
-### Day 7 Outcome
-
-### Phase A — Basic Traffic Controller
+### Phase A — Complete FSM Design and Normal Operation Verification
 **Status:** ✅ Complete
 
-A Moore FSM with 5 states controlling a traffic light system.
-Timer-based transitions — each state remains active for a 
-configurable number of clock cycles before transitioning.
+Designed and implemented a complete 5-state Moore FSM from the start.
+Timer-based transitions, ALL_RED safety state, and emergency override
+all included in the initial design based on the paper state diagram.
+
+Phase A testbench verified normal operation — full cycle through
+RED → YELLOW → GREEN → ALL_RED → RED with correct timer durations
+confirmed in GTKWave.
 
 **States:**
 
-| State     |         Output           |    Duration   |
-|-----------|--------------------------|---------------|
-| RED       |           Red=1          |    5 cycles   |
-| YELLOW    |          Yellow=1        |     3 cycles  |
-| GREEN     |           Green=1        |    10 cycles  |
-| ALL_RED   | Red=1, Yellow=1, Green=1 |    2 cycles   |
-| EMERGENCY | Red=1, Emergency_out=1   | Until cleared |
-
-**Waveform:**
-
-![Phase A Waveform](Waveforms/waveform_basic.png)
+|    State  |          Output          |    Duration  |
+|-----------|--------------------------|--------------|
+|   RED     |          Red=1           |   5 cycles   |
+| YELLOW    |         Yellow=1         | 3 cycles     |
+| GREEN     |         Green=1          | 10 cycles    |
+| ALL_RED   | Red=1, Yellow=1, Green=1 | 2 cycles     |
+| EMERGENCY |  Red=1, Emergency_out=1  | Until cleared |
 
 **State Diagram:**
 
 ![Phase A State Diagram](docs/state_diagram_phase_a.jpeg)
 
+**Phase A Waveform:**
+
+![Phase A Waveform](Waveforms/waveform_basic.png)
+
 **Key design decisions:**
 - Timer implemented as a counter inside the state register block
-- `state_duration` computed combinationally based on current state
+- `state_duration` computed combinationally based on current state — separates timing from sequential logic
 - ALL_RED state added as a safety buffer between GREEN and RED
-- EMERGENCY stores previous state for clean recovery
+- EMERGENCY state stores previous_state for clean recovery when emergency clears
+- Emergency override designed into initial architecture — not retrofitted
 
 **Files:**
 - `src/Traffic_Controller.v` — main FSM module
 - `testbenches/Traffic_Controller_tb.v` — Phase A testbench
 
+---
+
+### Phase B — Exhaustive Emergency Scenario Verification
+**Status:** ✅ Complete
+
+Dedicated verification testbench written specifically for emergency
+scenarios. Phase A testbench only verified normal operation with
+Emergency permanently LOW. Phase B fires Emergency during every
+possible state and verifies correct recovery.
+
+**Key testbench technique used:**
+`wait` statements automatically detect when FSM reaches the target
+state before firing Emergency — eliminates manual delay calculations
+and makes the testbench independent of timer duration values.
+
+```verilog
+wait (DUT.Current_state == 3'b001); #2;
+Emergency = 1'b1; #10;
+Emergency = 1'b0; #10;
+```
+
+**Scenarios verified:**
+
+| Scenario | Emergency Fired During | State Code | Recovery State | Result |
+|----------|------------------------|------------|----------------|--------|
+|    1     |          RED           |     000    |    RED (000)   |   ✅   |
+|    2     |         YELLOW         |     001    |   YELLOW (001) |   ✅   |
+|    3     |          GREEN         |     010    |   GREEN (010)  |   ✅   |
+|    4     |         ALL_RED        |     011    |  ALL_RED (011) |   ✅   |
+
+**Phase B Waveform:**
+
+![Phase B Waveform](Waveforms/Verification_pahse_b.png)
+
+**Waveform confirms:**
+- Current_state immediately jumps to 100 (EMERGENCY) on clock edge after Emergency goes HIGH
+- Emergency_out goes HIGH and Red goes HIGH simultaneously during EMERGENCY state
+- Timer resets to 0 on every emergency event and on every recovery
+- FSM returns to exact previous state when Emergency clears in all 4 cases
+- No stuck states or undefined behaviour observed
+
+**Known limitation:**
+When Emergency fires near the end of a state and clears, the FSM
+returns to that state with timer reset to 0 — giving the state its
+full duration again rather than the remaining cycles. A production
+design would store remaining timer value alongside previous_state.
+This is discussed further in Phase C.
+
+**Files:**
+- `testbenches/PHASE_B_verification_tb.v` — Phase B emergency testbench
+
+---
+
+### Phase C — Synthesis Analysis and Research Findings
+**Status:** ⬜ Not Started
+
+Yosys open-source synthesis tool will be run on the complete design
+to extract gate count, flip-flop count, and generate a schematic.
+Design decisions will be compared against published literature on
+FSM-based traffic controllers. The research question will be answered
+with evidence from synthesis data and simulation results.
+
+**Planned deliverables:**
+- Gate count and flip-flop report from Yosys
+- Visual schematic of synthesised design
+- Literature comparison table
+- Research question answered with evidence
+
+---
+
+## Module Structure
+
+|     Module         |              File                       |              Description                     |
+|--------------------|-----------------------------------------|----------------------------------------------|
+| Traffic Controller |       `src/Traffic_Controller.v`        | Complete 5-state FSM with emergency override |
+| Phase A Testbench  |   `testbenches/Traffic_Controller_tb.v` |      Normal operation verification           |
+| Phase B Testbench  | `testbenches/PHASE_B_verification_tb.v` |      Emergency scenario verification         |
+
+---
+
+## State Transition Table
+
+| Current State | Emergency | Timer Condition | Next State |
+|--------------|-----------|-----------------|------------|
+| RED | 0 | Timer < 5 | RED |
+| RED | 0 | Timer = 5 | YELLOW |
+| YELLOW | 0 | Timer < 3 | YELLOW |
+| YELLOW | 0 | Timer = 3 | GREEN |
+| GREEN | 0 | Timer < 10 | GREEN |
+| GREEN | 0 | Timer = 10 | ALL_RED |
+| ALL_RED | 0 | Timer < 2 | ALL_RED |
+| ALL_RED | 0 | Timer = 2 | RED |
+| Any normal state | 1 | Don't care | EMERGENCY |
+| EMERGENCY | 1 | Don't care | EMERGENCY |
+| EMERGENCY | 0 | Don't care | Previous State |
+
+---
+
+## Tools
+
+| Tool | Purpose |
+|------|---------|
+| Icarus Verilog | Compilation and functional simulation |
+| GTKWave | Waveform viewing and timing verification |
+| VS Code | Code editor with Verilog syntax support |
+| Yosys | Open-source synthesis — gate count and schematic (Phase C) |
+| GitHub | Version control and documentation |
+
+---
 
 ## Current Progress
 
 - [x] Project structure created
 - [x] Research question defined
-- [x] Phase A — Basic FSM designed and simulated
+- [x] Phase A — Complete 5-state FSM designed and simulated
 - [x] Phase A — Timer-based transitions verified in GTKWave
+- [x] Phase A — ALL_RED safety state verified
 - [x] Phase A — State diagram documented
-- [ ] Phase B — Emergency override tested with dedicated testbench
-- [ ] Phase B — Recovery behaviour verified
-- [ ] Phase C — Comparison written
-- [ ] Phase C — README complete with findings
+- [x] Phase B — Emergency testbench written using wait statements
+- [x] Phase B — Emergency verified during RED, YELLOW, GREEN, ALL_RED
+- [x] Phase B — Previous state recovery confirmed in all 4 cases
+- [x] Phase B — Waveform screenshot documented
+- [ ] Phase C — Yosys synthesis run on complete design
+- [ ] Phase C — Gate count and schematic extracted
+- [ ] Phase C — 2-3 research papers read and compared
+- [ ] Phase C — Research question answered with evidence
+- [ ] Phase C — README complete with final findings
 
 ---
-### Phase B — Emergency Vehicle Override
-**Status:** 🔄 In Progress
----
 
-*This project is part of my preparation for VLSI research internship 
+*This project is part of preparation for VLSI research internship 
 applications. The goal is not just a working simulation — it is 
-understanding the design decisions behind it.*
+understanding the design decisions behind it and their hardware 
+implications.*
+---
+### 🚀 Author
 
+Yash Gupta
+
+Learning Verilog HDL through structured RTL design, simulation, FSM design, and digital system implementation.

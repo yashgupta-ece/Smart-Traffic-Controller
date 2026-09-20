@@ -1,0 +1,301 @@
+$date
+	Sun Sep 20 14:05:45 2026
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module PHASE_B_verification_tb $end
+$var wire 1 ! Yellow $end
+$var wire 1 " Red $end
+$var wire 1 # Green $end
+$var wire 1 $ Emergency_out $end
+$var reg 1 % Clock $end
+$var reg 1 & Emergency $end
+$var reg 1 ' Reset $end
+$scope module DUT $end
+$var wire 1 % Clock $end
+$var wire 1 & Emergency $end
+$var wire 1 ' Reset $end
+$var parameter 3 ( All_RED $end
+$var parameter 3 ) EMERGENCY $end
+$var parameter 3 * GREEN $end
+$var parameter 3 + RED $end
+$var parameter 3 , YELLOW $end
+$var reg 3 - Current_state [2:0] $end
+$var reg 1 $ Emergency_out $end
+$var reg 1 # Green $end
+$var reg 3 . Next_state [2:0] $end
+$var reg 3 / Previous_state [2:0] $end
+$var reg 1 " Red $end
+$var reg 1 ! Yellow $end
+$var reg 4 0 state_duration [3:0] $end
+$var reg 4 1 timer [3:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+b1 ,
+b0 +
+b10 *
+b100 )
+b11 (
+$end
+#0
+$dumpvars
+b0 1
+b101 0
+b0 /
+b1 .
+b0 -
+1'
+0&
+0%
+0$
+0#
+1"
+0!
+$end
+#5000
+1%
+#10000
+0%
+#12000
+0'
+#15000
+b1 1
+1%
+#20000
+0%
+#22000
+b1 .
+1&
+#25000
+b0 0
+1$
+1"
+b100 .
+b0 1
+b100 -
+1%
+#30000
+0%
+#32000
+b0 .
+0&
+#35000
+0$
+1"
+b101 0
+b1 .
+b0 -
+1%
+#40000
+0%
+#45000
+b1 1
+1%
+#50000
+0%
+#55000
+b10 1
+1%
+#60000
+0%
+#65000
+b11 1
+1%
+#70000
+0%
+#75000
+b100 1
+1%
+#80000
+0%
+#85000
+b11 0
+1!
+0"
+b10 .
+b0 1
+b1 -
+1%
+#87000
+b10 .
+1&
+#90000
+0%
+#95000
+1"
+1$
+0!
+b0 0
+b100 .
+b100 -
+b1 /
+1%
+#97000
+b1 .
+0&
+#100000
+0%
+#105000
+b11 0
+1!
+0$
+0"
+b10 .
+b1 -
+1%
+#110000
+0%
+#115000
+b1 1
+1%
+#120000
+0%
+#125000
+b10 1
+1%
+#130000
+0%
+#135000
+1#
+0!
+b1010 0
+b11 .
+b0 1
+b10 -
+1%
+#137000
+b11 .
+1&
+#140000
+0%
+#145000
+b0 0
+1"
+1$
+0#
+b100 .
+b100 -
+b10 /
+1%
+#147000
+b10 .
+0&
+#150000
+0%
+#155000
+1#
+0$
+0"
+b1010 0
+b11 .
+b10 -
+1%
+#160000
+0%
+#165000
+b1 1
+1%
+#170000
+0%
+#175000
+b10 1
+1%
+#180000
+0%
+#185000
+b11 1
+1%
+#190000
+0%
+#195000
+b100 1
+1%
+#200000
+0%
+#205000
+b101 1
+1%
+#210000
+0%
+#215000
+b110 1
+1%
+#220000
+0%
+#225000
+b111 1
+1%
+#230000
+0%
+#235000
+b1000 1
+1%
+#240000
+0%
+#245000
+b1001 1
+1%
+#250000
+0%
+#255000
+b10 0
+1!
+1"
+1#
+b0 .
+b0 1
+b11 -
+1%
+#257000
+b0 .
+1&
+#260000
+0%
+#265000
+1$
+0#
+0!
+1"
+b0 0
+b100 .
+b100 -
+b11 /
+1%
+#267000
+b11 .
+0&
+#270000
+0%
+#275000
+b10 0
+1#
+1!
+0$
+1"
+b0 .
+b11 -
+1%
+#280000
+0%
+#285000
+b1 1
+1%
+#290000
+0%
+#295000
+0#
+0!
+1"
+b101 0
+b1 .
+b0 1
+b0 -
+1%
+#297000
