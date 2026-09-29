@@ -89,7 +89,7 @@ confirmed in GTKWave.
 
 **Phase A Waveform:**
 
-![Phase A Waveform](Waveforms/waveform_basic.png)
+![Phase A Waveform](Waveforms/waveform_smart_controller.png)
 
 **Key design decisions:**
 - Timer implemented as a counter inside the state register block
@@ -211,6 +211,72 @@ with evidence from synthesis data and simulation results.
 | GitHub | Version control and documentation |
 
 ---
+---
+### Phase C — Synthesis Analysis and Comparison
+**Status:** 🔄 In Progress
+
+**C1 — Basic Controller built and verified ✅**
+
+A stripped-down 4-state Moore FSM with no emergency logic — built
+specifically as a baseline for comparison against the Smart Controller.
+Same timer durations, same state structure, no previous_state register,
+no emergency input, no Emergency_out output.
+
+**States:**
+
+| State | Output | Duration |
+|-------|--------|----------|
+| RED | Red=1 | 5 cycles |
+| YELLOW | Yellow=1 | 3 cycles |
+| GREEN | Green=1 | 10 cycles |
+| ALL_RED | Red=1, Yellow=1, Green=1 | 2 cycles |
+
+**What is intentionally absent vs Smart Controller:**
+- No `Emergency` input port
+- No `Emergency_out` output port
+- No `previous_state` register
+- No EMERGENCY state (4 states instead of 5)
+- State encoding: 2 bits instead of 3 bits
+- No priority mux logic in state register block
+
+**Basic Controller Waveform:**
+
+![Basic Controller Waveform](Waveforms/waveform_basic_controller.png)
+
+**Waveform confirms:**
+- RED holds for 5 cycles ✅
+- YELLOW holds for 3 cycles ✅
+- GREEN holds for 10 cycles ✅
+- ALL_RED holds for 2 cycles with all three lights HIGH ✅
+- Reset initialises to RED correctly ✅
+- Cycle repeats without errors ✅
+
+**Files:**
+- `src/basic_controller.v` — baseline FSM module
+- `testbenches/tb_basic_controller.v` — Phase C1 testbench
+
+---
+
+**C2 — Yosys Synthesis Comparison** ⬜ Not Started
+
+Synthesise both `basic_controller.v` and `Traffic_Controller.v` using
+Yosys. Compare gate count, flip-flop count, and area estimate.
+
+**Expected comparison table:**
+
+| Metric | Basic Controller | Smart Controller | Overhead |
+|--------|-----------------|-----------------|---------|
+| State bits | 2 | 3 | +1 bit |
+| Total cells | — | — | — |
+| Flip-flops | — | — | — |
+| Combinational cells | — | — | — |
+| Area estimate | — | — | — |
+
+**C3 — Research Findings** ⬜ Not Started
+
+Document what hardware overhead the emergency feature introduces.
+Answer the research question with synthesis evidence.
+---
 
 ## Current Progress
 
@@ -224,11 +290,14 @@ with evidence from synthesis data and simulation results.
 - [x] Phase B — Emergency verified during RED, YELLOW, GREEN, ALL_RED
 - [x] Phase B — Previous state recovery confirmed in all 4 cases
 - [x] Phase B — Waveform screenshot documented
-- [ ] Phase C — Yosys synthesis run on complete design
-- [ ] Phase C — Gate count and schematic extracted
-- [ ] Phase C — 2-3 research papers read and compared
-- [ ] Phase C — Research question answered with evidence
-- [ ] Phase C — README complete with final findings
+- [x] Phase C1 — Basic Controller designed and simulated
+- [x] Phase C1 — Timer-based transitions verified in GTKWave
+- [x] Phase C1 — Waveform documented
+- [ ] Phase C2 — Yosys synthesis on Basic Controller
+- [ ] Phase C2 — Yosys synthesis on Smart Controller
+- [ ] Phase C2 — Comparison table populated with real numbers
+- [ ] Phase C3 — Research question answered with evidence
+- [ ] Phase C3 — README complete with final findings
 
 ---
 

@@ -1,0 +1,188 @@
+$date
+	Sun Sep 27 22:01:52 2026
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module tb_basic_controller $end
+$var wire 1 ! Yellow $end
+$var wire 1 " Red $end
+$var wire 1 # Green $end
+$var reg 1 $ Clock $end
+$var reg 1 % Reset $end
+$scope module dut $end
+$var wire 1 $ Clock $end
+$var wire 1 % Reset $end
+$var parameter 2 & All_RED $end
+$var parameter 2 ' GREEN $end
+$var parameter 2 ( RED $end
+$var parameter 2 ) YELLOW $end
+$var reg 2 * Current_state [1:0] $end
+$var reg 1 # Green $end
+$var reg 2 + Next_state [1:0] $end
+$var reg 1 " Red $end
+$var reg 1 ! Yellow $end
+$var reg 4 , state_duration [3:0] $end
+$var reg 4 - timer [3:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+b1 )
+b0 (
+b10 '
+b11 &
+$end
+#0
+$dumpvars
+b0 -
+b101 ,
+b1 +
+b0 *
+1%
+0$
+0#
+1"
+0!
+$end
+#5
+1$
+#10
+0$
+0%
+#15
+b1 -
+1$
+#20
+0$
+#25
+b10 -
+1$
+#30
+0$
+#35
+b11 -
+1$
+#40
+0$
+#45
+b100 -
+1$
+#50
+0$
+#55
+b11 ,
+b10 +
+1!
+0"
+b0 -
+b1 *
+1$
+#60
+0$
+#65
+b1 -
+1$
+#70
+0$
+#75
+b10 -
+1$
+#80
+0$
+#85
+1#
+0!
+b11 +
+b1010 ,
+b0 -
+b10 *
+1$
+#90
+0$
+#95
+b1 -
+1$
+#100
+0$
+#105
+b10 -
+1$
+#110
+0$
+#115
+b11 -
+1$
+#120
+0$
+#125
+b100 -
+1$
+#130
+0$
+#135
+b101 -
+1$
+#140
+0$
+#145
+b110 -
+1$
+#150
+0$
+#155
+b111 -
+1$
+#160
+0$
+#165
+b1000 -
+1$
+#170
+0$
+#175
+b1001 -
+1$
+#180
+0$
+#185
+b10 ,
+b0 +
+1!
+1"
+1#
+b0 -
+b11 *
+1$
+#190
+0$
+#195
+b1 -
+1$
+#200
+0$
+#205
+0#
+0!
+1"
+b1 +
+b101 ,
+b0 -
+b0 *
+1$
+#210
+0$
+#215
+b1 -
+1$
+#220
+0$
+#225
+b10 -
+1$
+#230
+0$
